@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AutoCortes · TikTok</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  code { display: block; word-break: break-all; padding: 12px; background: #0001; border-radius: 8px; }
+  button { margin-top: 12px; padding: 10px 18px; border-radius: 8px; border: 0; background: #FE2C55; color: #fff; font-weight: 700; }
+</style>
+</head>
+<body>
+<main>
+  <h1>AutoCortes · conexão com o TikTok</h1>
+  <p id="msg">Lendo a resposta do TikTok…</p>
+  <code id="code" hidden></code>
+  <button id="copy" hidden>Copiar código</button>
+  <p><small>Esta página só mostra o código de autorização devolvido pelo TikTok para o dono da ferramenta
+  copiá-lo para o servidor dele. Nada é enviado ou guardado por esta página.</small></p>
+</main>
+<script>
+  const q = new URLSearchParams(location.search);
+  const msg = document.getElementById("msg"), box = document.getElementById("code"), btn = document.getElementById("copy");
+  if (q.get("code")) {
+    msg.textContent = "Autorizado! Copie o código abaixo e mande para o Claude (ele vale por poucos minutos).";
+    box.textContent = q.get("code");
+    box.hidden = btn.hidden = false;
+    btn.onclick = () => navigator.clipboard.writeText(q.get("code")).then(() => btn.textContent = "Copiado ✓");
+  } else if (q.get("error")) {
+    msg.textContent = "O TikTok devolveu um erro: " + q.get("error") + " " + (q.get("error_description") || "");
+  } else {
+    msg.textContent = "Nenhum código recebido.";
+  }
+</script>
+</body>
+</html>
